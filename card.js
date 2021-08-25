@@ -1,16 +1,15 @@
-/* selecciona y transforma en variable */
 let btnShuffle = document.querySelector("#btnShuffle");
 let btnSort = document.querySelector("#btnSort");
 
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 let suits = ["♦", "♥", "♠", "♣"];
 
-let orderCards = []; //Acá lo almacenare.
+let cardOrder = [];
 
 function createCards(elem) {
   let input = document.getElementById("valueCards");
-  let valueCards = parseInt(input.value); //pido valor entero
-  orderCards = [];
+  let valueCards = parseInt(input.value);
+  cardOrder = [];
 
   for (let i = 0; i < valueCards; i++) {
     let randomNumber = Math.floor(Math.random() * numbers.length);
@@ -20,7 +19,7 @@ function createCards(elem) {
     card.classList.add("card");
 
     let topSuit = document.createElement("div");
-    topSuit.classList.add("topSuit");
+    topSuit.classList.add("top");
     topSuit.innerHTML = suits[randomSuit];
 
     let middleNumber = document.createElement("div");
@@ -28,7 +27,7 @@ function createCards(elem) {
     middleNumber.innerHTML = changeValue(numbers[randomNumber]);
 
     let bottonSuit = document.createElement("div");
-    bottonSuit.classList.add("bottonSuit");
+    bottonSuit.classList.add("downSuit");
 
     if (topSuit.innerHTML === "♥" || topSuit.innerHTML === "♦") {
       topSuit.style.color = "red";
@@ -52,11 +51,11 @@ function createCards(elem) {
       html: card.innerHTML,
     };
 
-    orderCards.push(cardContent);
+    cardOrder.push(cardContent);
   }
 }
-function changeValue(valor) {
-  switch (valor) {
+function changeValue(value) {
+  switch (value) {
     case 1:
       return "A";
     case 11:
@@ -66,7 +65,7 @@ function changeValue(valor) {
     case 13:
       return "K";
     default:
-      return valor;
+      return value;
   }
 }
 
@@ -74,31 +73,29 @@ btnShuffle.addEventListener("click", (e) => {
   const cardDeck = document.querySelector("#cardValue");
   cardValue.innerHTML = "";
   createCards(cardDeck);
-  // let sortDeck = document.getElementById('sortDeck');
-  // sortDeck.innerHTML = "";
 });
 
 btnSort.addEventListener("click", (e) => {
   let sortDeck = document.getElementById("sortDeck");
   sortDeck.innerHTML = "";
 
-  for (let j = orderCards.length - 1; j > 0; j--) {
-    for (let k = 0; k < j; k++) {
-      if (orderCards[k].number > orderCards[k + 1].number) {
-        let aux = orderCards[k];
-        orderCards[k] = orderCards[k + 1];
-        orderCards[k + 1] = aux;
-        let firstStep = document.createElement("div");
-        firstStep.classList.add("lines");
-        sortDeck.appendChild(firstStep);
-        var lineBar = sortDeck.childElementCount;
-        firstStep.innerHTML = lineBar;
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    for (let k = 0; k < i; k++) {
+      if (cardOrder[k].number > cardOrder[k + 1].number) {
+        let aux = cardOrder[k];
+        cardOrder[k] = cardOrder[k + 1];
+        cardOrder[k + 1] = aux;
+        let stepOne = document.createElement("div");
+        stepOne.classList.add("fila");
+        sortDeck.appendChild(stepOne);
+        var filaBar = sortDeck.childElementCount;
+        stepOne.innerHTML = filaBar;
 
-        for (let h = 0; h < orderCards.length; h++) {
-          let newCard = document.createElement("div");
-          newCard.classList.add("newCard");
-          newCard.innerHTML = orderCards[h].html;
-          firstStep.appendChild(newCard);
+        for (let o = 0; o < cardOrder.length; o++) {
+          let cardNew = document.createElement("div");
+          cardNew.classList.add("cardNew");
+          cardNew.innerHTML = cardOrder[o].html;
+          stepOne.appendChild(cardNew);
         }
       }
     }
